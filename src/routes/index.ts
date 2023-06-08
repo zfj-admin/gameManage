@@ -9,6 +9,11 @@ let routes = [
     component: () => import('@/views/snake/index.vue')
   },
   {
+    path: '/chess',
+    name: 'chess',
+    component: () => import('@/views/fiveChess/double.vue')
+  },
+  {
   // 配置404页面
   path: '/:catchAll(.*)',
   name: '404',

@@ -49,7 +49,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
       router.push("/");
       break;
     case "2":
-      router.push("index");
+      router.push("chess");
       break;
     default:
     router.push("/");
