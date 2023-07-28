@@ -4,23 +4,41 @@
     <div class="container">
       <div class="aside">
         <el-menu
-          default-active="1"
+          :default-active="state.activeRouter"
           class="el-menu-vertical-demo"
           @select="handleSelect"
+          unique-opened
         >
-          <el-menu-item index="1">
-            <el-icon><KnifeFork /></el-icon>
-            <span>贪吃蛇</span>
-          </el-menu-item>
-          <el-menu-item index="2">
-            <el-icon><icon-menu /></el-icon>
-            <span>五子棋</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <el-icon><document /></el-icon>
-            <span>Navigator Three</span>
-          </el-menu-item>
-          <el-menu-item index="4">
+          <el-sub-menu index="0">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>html+css</span>
+            </template>
+            <el-menu-item index="/">三角形</el-menu-item>
+            <el-menu-item index="/waterfallWall">瀑布墙</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="1">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>vue3属性</span>
+            </template>
+            <el-menu-item index="/vue3/computed">computed</el-menu-item>
+            <el-menu-item index="/vue3/father">组件传值</el-menu-item>
+            <el-menu-item index="/vue3/treeComponent">递归组件</el-menu-item>
+            <el-sub-menu index="1-4">
+              <template #title>item four</template>
+              <el-menu-item index="1-4-1">item one</el-menu-item>
+            </el-sub-menu>
+          </el-sub-menu>
+          <el-sub-menu index="2">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>游戏管理</span>
+            </template>
+            <el-menu-item index="/game/snake">贪吃蛇</el-menu-item>
+            <el-menu-item index="/game/chess">五子棋</el-menu-item>
+          </el-sub-menu>
+          <el-menu-item index="/abc">
             <el-icon><setting /></el-icon>
             <span>Navigator Four</span>
           </el-menu-item>
@@ -39,23 +57,32 @@ import {
   Location,
   Setting,
 } from "@element-plus/icons-vue";
-
-import { useRouter } from "vue-router";
+import { watch, reactive } from "vue";
+import {
+  useRouter,
+  NavigationGuardNext,
+  RouteLocationNormalized,
+} from "vue-router";
 const router = useRouter();
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  switch (key) {
-    case "1":
-      router.push("/");
-      break;
-    case "2":
-      router.push("chess");
-      break;
-    default:
-    router.push("/");
-      break;
+// 解决刷新之后，总是默认第一个菜单时激活状态
+router.beforeEach(
+  (
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalized,
+    next: NavigationGuardNext
+  ) => {
+    state.activeRouter = to.path;
+    next();
   }
-};
+);
+const state = reactive({
+  activeRouter: "/",
+});
+const handleSelect = (index:string) => {
+  state.activeRouter = index;
+  console.log(index);
+  router.push({ path:index, });
+}
 </script>
 <style scoped lang="scss">
 @import "@/styles/variables.scss";
@@ -71,7 +98,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
     display: flex;
     height: calc(100% - 100px);
     .aside {
-      flex-basis: 200px;
+      flex-basis: 250px;
       height: 100%;
       overflow: auto;
       border-right: solid 1px #dcdfe6;
